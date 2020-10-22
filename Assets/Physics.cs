@@ -25,7 +25,7 @@ public class Physics : MonoBehaviour
     {
         float angleAcc;
 
-        angleAcc = -Gravity / pend.length * Mathf.Sin(pend.angle * Mathf.Deg2Rad);
+        angleAcc = -Gravity / pend.length * Mathf.Sin(pend.angle );
 
         return angleAcc;
     }
@@ -34,11 +34,11 @@ public class Physics : MonoBehaviour
     {
         float angleAcc;
 
-        float num1 = -gravity * (2 * pend1.mass + pend2.mass) * Mathf.Sin(pend1.angle * Mathf.Deg2Rad);
-        float num2 = -pend2.mass * gravity * Mathf.Sin(pend1.angle * Mathf.Deg2Rad - 2 * pend2.angle * Mathf.Deg2Rad);
-        float num3 = -2 * Mathf.Sin(pend1.angle * Mathf.Deg2Rad - pend2.angle * Mathf.Deg2Rad) * pend2.mass;
-        float num4 = Mathf.Pow(pend2.angleVelocity, 2) * pend2.length + Mathf.Pow(pend1.angleVelocity, 2) * pend1.length * Mathf.Cos(pend1.angle * Mathf.Deg2Rad - pend2.angle * Mathf.Deg2Rad);
-        float den = pend1.length * (2 * pend1.mass + pend2.mass - (pend2.mass * Mathf.Cos(2 * pend1.angle * Mathf.Deg2Rad - 2 * pend2.angle * Mathf.Deg2Rad)));
+        float num1 = -gravity * (2 * pend1.mass + pend2.mass) * Mathf.Sin(pend1.angle);
+        float num2 = -pend2.mass * gravity * Mathf.Sin(pend1.angle - 2 * pend2.angle);
+        float num3 = -2 * Mathf.Sin(pend1.angle - pend2.angle) * pend2.mass;
+        float num4 = Mathf.Pow(pend2.angleVelocity, 2) * pend2.length + Mathf.Pow(pend1.angleVelocity, 2) * pend1.length * Mathf.Cos(pend1.angle - pend2.angle );
+        float den = pend1.length * (2 * pend1.mass + pend2.mass - (pend2.mass * Mathf.Cos(2 * pend1.angle - 2 * pend2.angle)));
 
         angleAcc = (num1 + num2 + num3 * num4) / den;
 
@@ -49,11 +49,11 @@ public class Physics : MonoBehaviour
     {
         float angleAcc;
 
-        float num1 = 2 * Mathf.Sin(pend1.angle * Mathf.Deg2Rad - pend2.angle * Mathf.Deg2Rad);
+        float num1 = 2 * Mathf.Sin(pend1.angle - pend2.angle);
         float num2 = (Mathf.Pow(pend1.angleVelocity, 2) * pend1.length * (pend1.mass + pend2.mass));
-        float num3 = gravity * (pend1.mass + pend2.mass) * Mathf.Cos(pend1.angle * Mathf.Deg2Rad);
-        float num4 = Mathf.Pow(pend2.angleVelocity, 2) * pend2.length * pend2.mass * Mathf.Cos(pend1.angle * Mathf.Deg2Rad - pend2.angle * Mathf.Deg2Rad);
-        float den = pend2.length * (2 * pend1.mass + pend2.mass - (pend2.mass * Mathf.Cos(2 * pend1.angle * Mathf.Deg2Rad - 2 * pend2.angle * Mathf.Deg2Rad)));
+        float num3 = gravity * (pend1.mass + pend2.mass) * Mathf.Cos(pend1.angle);
+        float num4 = Mathf.Pow(pend2.angleVelocity, 2) * pend2.length * pend2.mass * Mathf.Cos(pend1.angle - pend2.angle);
+        float den = pend2.length * (2 * pend1.mass + pend2.mass - (pend2.mass * Mathf.Cos(2 * pend1.angle - 2 * pend2.angle)));
 
         angleAcc = num1 * (num2 + num3 + num4) / den;
 

@@ -10,27 +10,23 @@ public class PhysicsObject : MonoBehaviour
     [SerializeField] protected float mass;
 
     private GameObject activeAnchor;
+    public GameObject Anchor { get { return anchor; } }
     private bool anchored = false;
     public float Mass { get { return mass; } }
     public bool Static { get { return staticObj; } }
 
-    protected virtual void FixedUpdate()
-    {
-        UpdateAnchors();
-    }
-
-    private void Start()
+    protected virtual void Start()
     {
         if (anchor != null)
             activeAnchor = AnchorObject();
     }
 
-    protected void UpdateAnchors() 
+    public void UpdateAnchors() 
     {
         if (anchored)
         {
-            this.transform.position += anchor.transform.position - this.activeAnchor.transform.position;
-            this.activeAnchor.transform.position = anchor.transform.position;
+            transform.position += anchor.transform.position - activeAnchor.transform.position;
+            activeAnchor.transform.position = anchor.transform.position;
         }
     }
 
