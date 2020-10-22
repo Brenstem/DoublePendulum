@@ -15,11 +15,11 @@ public class Arm : PhysicsObject
 {
     [SerializeField] private float initialAngle;
     [SerializeField] private GameObject massObject;
-    [SerializeField] private Arm otherPendulum;
+    [SerializeField] private PhysicsObject otherArm;
     [SerializeField] [Range(0, 0.001f)]private float damping;
-    [SerializeField] private bool Modifier;
 
-    public Pendulum thisPendulum;
+    private Pendulum thisPendulum;
+    private Pendulum otherPendulum;
 
     private void Awake()
     {
@@ -30,34 +30,36 @@ public class Arm : PhysicsObject
         thisPendulum.mass = massObject.GetComponent<PhysicsObject>().Mass;
         thisPendulum.length = transform.localScale.y;
         thisPendulum.angle = initialAngle * Mathf.Deg2Rad;
+    }
 
-        Time.timeScale *= 0.3f;
+    private void Start()
+    {
+        otherPendulum = otherArm.GetComponent<SecondArm>().thisPendulum;
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
          
-        if (Modifier)
-        {
-            UpdatePendulumAngles();
-            Damping();
-        }
+        UpdatePendulumAngles();
+        Damping();
 
-        print(otherPendulum.thisPendulum.angleVelocity * Mathf.Rad2Deg);
-        transform.RotateAround(anchor.transform.position, Vector3.right, thisPendulum.angleVelocity * Mathf.Rad2Deg);
+        print(Mathf.Clamp(otherPendulum.angleVelocity * Mathf.Rad2Deg, 2 * -Mathf.PI, 2 * Mathf.PI));
+        
+        transform.RotateAround(anchor.transform.position, Vector3.right, Mathf.Clamp(thisPendulum.angleVelocity * Mathf.Rad2Deg, -2 * Mathf.PI, 2 * Mathf.PI));
     }
 
     private void UpdatePendulumAngles()
     {
-        float pend1a = Physics.Variables.DoublePendAngleAcc(thisPendulum, otherPendulum.thisPendulum);
-        float pend2a = Physics.Variables.DoublePendleAngleAcc2(thisPendulum, otherPendulum.thisPendulum);
+        float pend1a = Physics.Variables.DoublePendAngleAcc(thisPendulum, otherPendulum);
+        float pend2a = Physics.Variables.DoublePendleAngleAcc2(thisPendulum, otherPendulum);
 
         thisPendulum.angleVelocity += pend1a;
-        otherPendulum.thisPendulum.angleVelocity += pend2a;
+        otherPendulum.angleVelocity += pend2a;
+
 
         thisPendulum.angle += thisPendulum.angleVelocity;
-        otherPendulum.thisPendulum.angle += otherPendulum.thisPendulum.angleVelocity;
+        otherPendulum.angle += otherPendulum.angleVelocity;
     }
 
     private void Damping()
@@ -71,13 +73,13 @@ public class Arm : PhysicsObject
             thisPendulum.angleVelocity += damping;
         }
 
-        if (otherPendulum.thisPendulum.angleVelocity > 0)
+        if (otherPendulum.angleVelocity > 0)
         {
-            otherPendulum.thisPendulum.angleVelocity -= damping;
+            otherPendulum.angleVelocity -= damping;
         }
         else
         {
-            otherPendulum.thisPendulum.angleVelocity += damping;
+            otherPendulum.angleVelocity += damping;
         }
     }
 }

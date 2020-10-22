@@ -55,7 +55,7 @@ public class Physics : MonoBehaviour
         float num4 = Mathf.Pow(pend2.angleVelocity, 2) * pend2.length * pend2.mass * Mathf.Cos(pend1.angle * Mathf.Deg2Rad - pend2.angle * Mathf.Deg2Rad);
         float den = pend2.length * (2 * pend1.mass + pend2.mass - (pend2.mass * Mathf.Cos(2 * pend1.angle * Mathf.Deg2Rad - 2 * pend2.angle * Mathf.Deg2Rad)));
 
-        angleAcc = (num1 * (num2 + num3 + num4)) / den;
+        angleAcc = num1 * (num2 + num3 + num4) / den;
 
         return angleAcc;
     }
